@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.matchdayai.dto.UserRequest;
+import com.matchdayai.dto.UserResponse;
 import com.matchdayai.entity.User;
 import com.matchdayai.repository.UserRepository;
 
@@ -17,12 +19,30 @@ public class UserService {
         this.repository = repository;
     }
 
-    public User save(User user) {
+    public UserResponse createUser(UserRequest request) {
 
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .role(request.getRole())
+                .phone(request.getPhone())
+                .preferredLanguage(request.getPreferredLanguage())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
-        return repository.save(user);
+        User savedUser = repository.save(user);
+
+        return UserResponse.builder()
+                .id(savedUser.getId())
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .role(savedUser.getRole())
+                .phone(savedUser.getPhone())
+                .preferredLanguage(savedUser.getPreferredLanguage())
+                .createdAt(savedUser.getCreatedAt())
+                .build();
     }
 
     public List<User> getAllUsers() {
