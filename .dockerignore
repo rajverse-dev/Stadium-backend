@@ -1,0 +1,9 @@
+target/
+.git/
+.github/
+.agents/
+.codex/
+.mvn/
+mvnw
+mvnw.cmd
+HELP.md
