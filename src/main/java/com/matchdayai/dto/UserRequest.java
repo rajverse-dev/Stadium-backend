@@ -15,6 +15,7 @@ public class UserRequest {
     private String email;
 
     @NotBlank(message="Password is mandatory")
+    @jakarta.validation.constraints.Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
     private String role;

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST Controller for retrieving dashboard statistics and analytics.
+ */
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
@@ -27,6 +30,11 @@ public class DashboardController {
                 dashboardService;
     }
 
+    /**
+     * Retrieves overall dashboard statistics including visitors, incidents, and parking availability.
+     *
+     * @return ResponseEntity containing current DashboardStats
+     */
     @GetMapping("/stats")
     public ResponseEntity<DashboardStats>
     getDashboardStats() {

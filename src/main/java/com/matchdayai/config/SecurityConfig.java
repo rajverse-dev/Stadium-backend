@@ -47,19 +47,19 @@ public class SecurityConfig {
 
                         // Temporarily public for connection testing
                         .requestMatchers("/api/dashboard/**")
-                        .permitAll()
+                        .authenticated()
 
                         .requestMatchers("/api/crowd/**")
-                        .permitAll()
+                        .authenticated()
 
                         .requestMatchers("/api/queues/**")
-                        .permitAll()
+                        .authenticated()
 
                         .requestMatchers("/api/transport/**")
-                        .permitAll()
+                        .authenticated()
 
                         .requestMatchers("/api/emergency", "/api/emergency/**")
-                        .permitAll()
+                        .authenticated()
 
                                 // Admin APIs
                         .requestMatchers("/api/admin/**")
@@ -74,16 +74,16 @@ public class SecurityConfig {
                         .hasAnyRole("ADMIN", "OPERATOR", "VISITOR")
                         
                         .requestMatchers("/api/navigation/**")
-                        .permitAll()
+                        .authenticated()
 
                         .requestMatchers("/api/navigation/**")
-                        .permitAll()  
+                        .authenticated()  
                         
                         .requestMatchers( "/api/chat","/api/chat/**")
-                        .permitAll()
+                        .authenticated()
 
                         .requestMatchers("/api/recommendations")
-                        .permitAll()
+                        .authenticated()
 
                         // All other APIs require JWT
                         .anyRequest()

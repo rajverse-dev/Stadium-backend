@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST Controller for managing User operations.
+ * Provides endpoints for user registration and retrieval.
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -19,6 +23,12 @@ public class UserController {
         this.service = service;
     }
 
+    /**
+     * Creates a new user in the system.
+     *
+     * @param request The user registration details
+     * @return ApiResponse containing the created UserResponse
+     */
     @PostMapping
     public ApiResponse<UserResponse> createUser(
             @Valid @RequestBody UserRequest request) {
@@ -32,6 +42,11 @@ public class UserController {
                 .build();
     }
 
+    /**
+     * Retrieves all registered users.
+     *
+     * @return A list of UserResponse objects representing all users
+     */
     @GetMapping
     public List<UserResponse> getAllUsers() {
         return service.getAllUsers();
