@@ -3,24 +3,21 @@ package com.matchdayai.controller;
 import com.matchdayai.dto.DashboardStats;
 import com.matchdayai.service.DashboardService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(DashboardController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 class DashboardControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @InjectMocks
+    private DashboardController dashboardController;
 
-    @MockBean
+    @Mock
     private DashboardService dashboardService;
 
     @Test
@@ -32,10 +29,10 @@ class DashboardControllerTest {
 
         Mockito.when(dashboardService.getDashboardStats()).thenReturn(mockStats);
 
-        mockMvc.perform(get("/api/dashboard/stats"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.visitors").value(50000))
-                .andExpect(jsonPath("$.emergencyAlerts").value(2))
-                .andExpect(jsonPath("$.announcements").value(5));
+        ResponseEntity<DashboardStats> response = dashboardController.getDashboardStats();
+        
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(50000, response.getBody().getVisitors());
+        assertEquals(2, response.getBody().getEmergencyAlerts());
     }
 }

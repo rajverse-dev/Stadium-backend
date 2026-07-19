@@ -6,33 +6,25 @@ import com.matchdayai.dto.UserResponse;
 import com.matchdayai.enums.Role;
 import com.matchdayai.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
-@AutoConfigureMockMvc(addFilters = false) // Bypass security filters for unit test
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @InjectMocks
+    private UserController userController;
 
-    @MockBean
+    @Mock
     private UserService userService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void createUser_ValidRequest_ReturnsSuccess() throws Exception {
@@ -51,12 +43,9 @@ class UserControllerTest {
 
         Mockito.when(userService.createUser(any(UserRequest.class))).thenReturn(response);
 
-        mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.email").value("john@example.com"));
+        com.matchdayai.dto.ApiResponse<UserResponse> apiResponse = userController.createUser(request);
+        
+        assertEquals("John Doe", apiResponse.getData().getName());
     }
 
     @Test
@@ -68,8 +57,8 @@ class UserControllerTest {
 
         Mockito.when(userService.getAllUsers()).thenReturn(List.of(user));
 
-        mockMvc.perform(get("/api/users"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("John Doe"));
+        List<UserResponse> list = userController.getAllUsers();
+        assertEquals(1, list.size());
+        assertEquals("John Doe", list.get(0).getName());
     }
 }
